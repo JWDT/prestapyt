@@ -24,14 +24,14 @@ import urllib
 import warnings
 import requests
 import mimetypes
-import xml2dict
-import dict2xml
+from . import xml2dict
+from . import dict2xml
 
 from xml.parsers.expat import ExpatError
 from distutils.version import LooseVersion
 try:
     from xml.etree import cElementTree as ElementTree
-except ImportError, e:
+except ImportError:
     from xml.etree import ElementTree
 
 # http://docs.python-requests.org/en/master/api/#api-changes
@@ -260,7 +260,7 @@ class PrestaShopWebService(object):
 
         try:
             parsed_content = ElementTree.fromstring(content)
-        except ExpatError, err:
+        except ExpatError as err:
             raise PrestaShopWebServiceError(
                 'HTTP XML response is not parsable : %s' % (err,)
             )
@@ -319,7 +319,7 @@ class PrestaShopWebService(object):
         """
         if self.debug:
             options.update({'debug': True})
-        return urllib.urlencode(options)
+        return urllib.parse.urlencode(options)
 
     def add(self, resource, content=None, files=None):
         """Add (POST) a resource. Content can be a dict of values to create.
